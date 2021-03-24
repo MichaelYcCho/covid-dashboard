@@ -12,8 +12,12 @@ totals_df = totals_df.rename(columns={'index': "coundition"})
 
 # 도시를 그룹화 한후 해당 도시의 확진자, 사망자, 회복자 수
 countries_df = daily_df[["Country_Region", "Confirmed", "Deaths", "Recovered"]]
-countries_df = daily_df.groupby("Country_Region").sum().reset_index()
-
+countries_df = (
+            countries_df.groupby("Country_Region")
+            .sum()
+            .sort_values(by="Confirmed", ascending=False)
+            .reset_index()
+)
 
 
 # 각 국가별 총확진자, 사망자, 완치자 수 
