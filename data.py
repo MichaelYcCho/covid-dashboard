@@ -20,6 +20,11 @@ countries_df = (
 )
 
 
+# 국가 리스트 DropDown 활용
+dropdown_options = countries_df.sort_values("Country_Region").reset_index()
+dropdown_options = dropdown_options["Country_Region"]
+
+
 # 각 국가별 총확진자, 사망자, 완치자 수 
 def make_country_df(country):
     def make_df(condition):
