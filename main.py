@@ -3,7 +3,13 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.express as px
-from data import countries_df, totals_df, dropdown_options, make_global_df
+from data import (
+    countries_df,
+    totals_df,
+    dropdown_options,
+    make_global_df,
+    make_country_df,
+)
 from builders import make_table
 
 
@@ -13,6 +19,8 @@ stylesheets = [
 ]
 
 app = dash.Dash(__name__, external_stylesheets=stylesheets)
+
+server = app.server
 
 bubble_map = px.scatter_geo(
     countries_df,
@@ -87,6 +95,12 @@ app.layout = html.Div(
                 html.Div(
                     children=[
                         dcc.Dropdown(
+                            style={
+                                "width": 320,
+                                "margin": "0 auto",
+                                "color": "#111111",
+                            },
+                            placeholder="Select a Country",
                             id="country",
                             options=[
                                 {"label": country, "value": country}
@@ -103,7 +117,10 @@ app.layout = html.Div(
 
 @app.callback(Output("country_graph", "figure"), [Input("country", "value")])
 def update_hello(value):
-    df = make_global_df()
+    if value:
+        df = make_country_df(value)
+    else:
+        df = make_global_df()
     fig = px.line(
         df,
         x="date",
@@ -119,5 +136,5 @@ def update_hello(value):
     return fig
 
 
-if __name__ == "__main__":
-    app.run_server(debug=True)
+# if __name__ == "__main__":
+#     app.run_server(debug=True)
